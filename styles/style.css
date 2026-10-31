@@ -1,0 +1,339 @@
+:root {
+    /* Variables reutilizables para los colores, tamaños, sombras y tipografía. */
+    --color-marco: #fff4f8;
+    --color-borde: #ff9ecb;
+    --color-texto-puntos: #ffffff;
+    --color-fondo-puntos: rgba(70, 30, 80, 0.75);
+
+    /* Añadido (IA): colores del título, botones y pantallas */
+    --color-titulo: #d6337f;
+    --color-titulo-sombra: #8f1f55;
+    --color-blanco: #ffffff;
+    --color-texto: rgb(70, 30, 80);
+    --color-rosa: #e0569a;
+    --color-rosa-oscuro: #a3306a;
+    --color-rosa-claro: #ffd0e4;
+    --color-capa: rgba(255, 240, 246, 0.6);
+    --color-caja: rgba(255, 244, 248, 0.95);
+    --color-amarillo: #ffd23f;
+    --color-fondo-pagina: #ffc4dd;
+
+    --grosor-marco: 0.25em;
+    --radio-tablero: 0.5em;
+    --ancho-borde-exterior: 0.3125em;
+    --radio-puntos: 0.3em;
+    --espacio-puntos: 0.3em 0.6em;
+    --tamano-texto-puntos: 0.8em;
+
+    --sombra-tablero: 0 0.875rem 1.875rem rgba(70, 30, 80, 0.35);
+    --imagen-fondo: url('../img/fondo.png');
+    --fuente: 'Pixelify Sans', 'Courier New', monospace;
+}
+
+* {
+    /* Incluye el borde y el relleno en el tamaño total de los elementos. */
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--color-fondo-pagina);
+    background-image: var(--imagen-fondo);
+    background-position: center bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    font-family: var(--fuente);
+    color: var(--color-texto);
+}
+
+.app {
+    /* Centra el juego dentro de la página. */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game {
+    /* Permite posicionar elementos decorativos sobre el tablero. */
+    position: relative;
+    width: fit-content;
+}
+
+
+.game--hidden {
+    visibility: hidden;
+}
+
+.game__canvas {
+    /* Evita el espacio adicional que algunos navegadores añaden al canvas. */
+    display: block;
+}
+
+/* Marco decorativo superpuesto al tablero, sin interferir con los clics. */
+.game::after {
+    content: "";
+    position: absolute;
+    top: 25%;
+    left: 13.75%;
+    width: 72.5%;
+    aspect-ratio: 1;
+    border: var(--grosor-marco) solid var(--color-marco);
+    border-radius: var(--radio-tablero);
+    box-shadow:
+        0 0 var(--ancho-borde-exterior) var(--color-borde),
+        var(--sombra-tablero);
+    pointer-events: none;
+}
+
+
+.title {
+    margin: 0;
+    color: var(--color-titulo);
+    font-size: clamp(3rem, 2rem + 6vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    text-shadow:
+        0.05em 0 0 var(--color-blanco),
+        -0.05em 0 0 var(--color-blanco),
+        0 0.05em 0 var(--color-blanco),
+        0 -0.05em 0 var(--color-blanco),
+        0.05em 0.05em 0 var(--color-blanco),
+        -0.05em 0.05em 0 var(--color-blanco),
+        0.05em -0.05em 0 var(--color-blanco),
+        -0.05em -0.05em 0 var(--color-blanco),
+        0 0.12em 0 var(--color-titulo-sombra);
+    animation: flotar 2s ease-in-out infinite;
+}
+
+.title--small {
+    /* Coloca el título pequeño en la parte superior del área de juego. */
+    position: absolute;
+    top: 2%;
+    left: 0;
+    width: 100%;
+    font-size: 3.4em;
+}
+
+
+.hud {
+    position: absolute;
+    top: 15%;
+    left: 13.75%;
+    width: 72.5%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+}
+
+.score {
+    /* Da formato a cada indicador de puntuación y movimientos. */
+    padding: var(--espacio-puntos);
+    border-radius: var(--radio-puntos);
+    background-color: var(--color-fondo-puntos);
+    color: var(--color-texto-puntos);
+    font-size: max(var(--tamano-texto-puntos), 0.7rem);
+    font-weight: bold;
+}
+
+
+.screen {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1.25rem;
+    padding: 1rem;
+}
+
+.screen--hidden {
+    /* Oculta una pantalla sin eliminarla del diseño. */
+    visibility: hidden;
+}
+
+.screen--end {
+    /* Añade una capa translúcida detrás de la pantalla de resultados. */
+    background-color: var(--color-capa);
+}
+
+/* Muestra los caramelos decorativos como imágenes de fondo. */
+.screen__candies {
+    width: min(21rem, 90vw);
+    height: 3rem;
+    background:
+        url('../img/corazon.png') 0 50% / 3rem no-repeat,
+        url('../img/estrella.png') 20% 50% / 3rem no-repeat,
+        url('../img/caramelo.png') 40% 50% / 3rem no-repeat,
+        url('../img/piruleta.png') 60% 50% / 3rem no-repeat,
+        url('../img/osito.png') 80% 50% / 3rem no-repeat,
+        url('../img/donut.png') 100% 50% / 3rem no-repeat;
+}
+
+.screen__text {
+    /* Estilo de las instrucciones y mensajes de las pantallas. */
+    margin: 0;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.3rem;
+    background-color: var(--color-fondo-puntos);
+    color: var(--color-texto-puntos);
+    font-size: clamp(0.9rem, 0.8rem + 0.5vw, 1.1rem);
+    text-align: center;
+}
+
+.screen__box {
+    /* Organiza el contenido de la pantalla dentro de una caja destacada. */
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+    padding: 1.5rem 2rem;
+    border: 0.25rem solid var(--color-rosa-oscuro);
+    border-radius: 0.5rem;
+    background-color: var(--color-caja);
+    box-shadow: 0 0.4rem 0 var(--color-rosa-oscuro);
+}
+
+.screen__title {
+    /* Estilo del encabezado de las pantallas de inicio y fin. */
+    margin: 0;
+    color: var(--color-titulo);
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.2rem);
+}
+
+.screen__score {
+    /* Resalta la puntuación final. */
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.screen__badge {
+
+    margin: 0;
+    padding: 0.2rem 0.6rem;
+    background-color: var(--color-amarillo);
+    font-weight: 700;
+}
+
+.screen__badge[hidden] {
+    /* Respeta el atributo hidden para ocultar la insignia cuando corresponda. */
+    display: none;
+}
+
+.screen__buttons {
+    /* Alinea los botones y permite que pasen a otra línea si falta espacio. */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 0.6rem;
+}
+
+
+.button {
+    padding: 0.6rem 2.2rem;
+    border: 0.2rem solid var(--color-rosa-oscuro);
+    border-radius: 0.3rem;
+    background-color: var(--color-rosa);
+    color: var(--color-blanco);
+    font-family: var(--fuente);
+    font-size: 2rem;
+    font-weight: 700;
+    box-shadow: 0 0.35rem 0 var(--color-rosa-oscuro);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.screen__buttons .button {
+    /* Reduce el tamaño de los botones que aparecen dentro de las pantallas. */
+    padding: 0.5rem 1.2rem;
+    font-size: 1.25rem;
+}
+
+.button:hover {
+    /* Eleva ligeramente el botón al pasar el puntero por encima. */
+    transform: translateY(-0.15rem);
+    box-shadow: 0 0.5rem 0 var(--color-rosa-oscuro);
+}
+
+.button:active {
+    /* Simula que el botón se presiona al hacer clic. */
+    transform: translateY(0.3rem);
+    box-shadow: 0 0.05rem 0 var(--color-rosa-oscuro);
+}
+
+.button:focus-visible {
+    /* Muestra un contorno visible al navegar con teclado. */
+    outline: 0.2rem solid var(--color-blanco);
+    outline-offset: 0.2rem;
+}
+
+.button--light {
+    /* Variante clara del botón para acciones secundarias. */
+    background-color: var(--color-blanco);
+    color: var(--color-rosa-oscuro);
+}
+
+@keyframes flotar {
+    /* Desplaza el título suavemente para crear una animación de flotación. */
+    50% {
+        transform: translateY(-0.05em);
+    }
+}
+
+/* Añadido (IA): Se usa IA especificamente para mejoras en responsive en telefono vertical, el título y el marcador suben para que quepan */
+
+@media (orientation: portrait) and (max-width: 600px) {
+    /* Ajusta el título y los indicadores para pantallas estrechas en vertical. */
+    .title--small {
+        top: -22%;
+        font-size: 5em;
+    }
+
+    .hud {
+        top: 9%;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .score {
+        font-size: max(1.1em, 0.75rem);
+    }
+}
+
+@media (max-height: 500px) {
+    /* Reduce elementos y espacios cuando la ventana tiene poca altura. */
+    .hud {
+        left: -25%;
+        width: 150%;
+    }
+
+    .screen {
+        gap: 0.6rem;
+    }
+
+    .title {
+        font-size: 2.8rem;
+    }
+
+    .screen__candies {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Desactiva la animación si el usuario prefiere menos movimiento. */
+    .title {
+        animation: none;
+    }
+}

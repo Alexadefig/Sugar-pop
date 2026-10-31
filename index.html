@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sugar Pop | Juego de golosinas</title>
+    <meta name="description"
+        content="Sugar Pop es un juego de golosinas en pixel art: une 3 o más iguales, encadena combos y bate tu récord en 20 movimientos.">
+    <meta name="theme-color" content="#ffb8d6">
+
+    <link rel="icon" href="img/corazon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&amp;display=swap">
+    <link rel="stylesheet" href="styles/style.css">
+
+    <script src="src/lib/kontra.min.js" defer></script>
+    <script type="module" src="src/main.js"></script>
+</head>
+
+<body>
+    <main class="app">
+        <section class="screen" id="start-screen" data-block="screen">
+            <h1 class="title">Sugar Pop</h1>
+            <div class="screen__candies" aria-hidden="true"></div>
+            <p class="screen__text">
+                Une 3 o más golosinas iguales en 20 movimientos.
+            </p>
+            <button class="button" id="play-button" type="button" title="Empezar a jugar">
+                Jugar
+            </button>
+            <p class="screen__text">Récord: <span id="start-record">0</span></p>
+        </section>
+
+        <section class="game game--hidden" id="game-screen" data-block="game">
+            <h2 class="title title--small">Sugar Pop</h2>
+
+            <ul class="hud">
+                <li class="score">Puntos: <span id="score">0</span></li>
+                <li class="score">Récord: <span id="record">0</span></li>
+                <li class="score">Movimientos: <span id="moves">20</span></li>
+            </ul>
+
+            <canvas class="game__canvas" id="canvas" width="640" height="640" role="img"
+                aria-label="Tablero de golosinas: pulsa una golosina y después una vecina para intercambiarlas">
+                Tu navegador no puede mostrar el juego.
+            </canvas>
+        </section>
+
+        <section class="screen screen--end screen--hidden" id="end-screen" data-block="screen">
+            <div class="screen__box">
+                <h2 class="screen__title">¡Fin del juego!</h2>
+                <p class="screen__score">Puntos: <span id="final-score">0</span></p>
+                <p class="screen__score">Récord: <span id="final-record">0</span></p>
+                <p class="screen__badge" id="new-record" hidden>¡Nuevo récord!</p>
+
+                <div class="screen__buttons">
+                    <button class="button" id="play-again-button" type="button" title="Jugar otra partida">
+                        Jugar otra vez
+                    </button>
+                    <button class="button button--light" id="home-button" type="button" title="Volver al inicio">
+                        Inicio
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+</body>
+
+</html>
